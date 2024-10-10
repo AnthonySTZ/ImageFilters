@@ -59,7 +59,7 @@ def blur(image: Image, blur_radius: int) -> None:
 
 
 @tcheck.mesure_function_time
-def blur_cpu(image: Image, blur_radius: int) -> None:
+def blur_optimize(image: Image, blur_radius: int) -> None:
     image_table = get_table_pixel(image)
 
     manager = multiprocessing.Manager()
