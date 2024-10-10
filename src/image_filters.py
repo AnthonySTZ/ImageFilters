@@ -94,6 +94,7 @@ def mult_proc_blur(
     blur_radius: int,
     returned_dict: dict,
 ) -> None:
+
     filtered_data = []
     width, height = len(base_image_table[0]), len(base_image_table)
     height_start = int((height / nb_of_processes) * curr_process)
