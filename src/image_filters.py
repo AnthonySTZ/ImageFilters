@@ -194,3 +194,7 @@ def mult_proc_gaussian_blur(
             filtered_data.append(tuple(pixel))
 
     returned_dict[curr_process] = filtered_data
+
+
+def mult_proc_canny_detection() -> None:
+    pass
