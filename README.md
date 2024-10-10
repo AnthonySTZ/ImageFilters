@@ -18,3 +18,8 @@ Create a basic blur filter on the original image.
 
 ![Blur Image](./assets/blur.jpg)
 
+## Gaussian Blur
+
+Create a Gaussian blur filter on the original image
+
+![Gaussian Blur Image](./assets/gaussian.jpg)
