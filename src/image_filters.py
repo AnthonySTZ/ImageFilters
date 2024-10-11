@@ -2,6 +2,7 @@ from PIL import Image
 import multiprocessing
 from multiprocessing import Process
 import timechecking as tcheck
+import math
 
 
 def get_table_pixel(image: Image) -> list:
@@ -232,5 +233,36 @@ def mult_proc_canny_detection(
     width, height = len(base_image_table[0]), len(base_image_table)
     height_start = int((height / nb_of_processes) * curr_process)
     height_end = int((height / nb_of_processes) * (curr_process + 1))
+
+    sobel_x_matrix = [[1, 0, -1], [2, 0, -2], [1, 0, -1]]
+    sobel_y_matrix = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]]
+
+    for y in range(height_start, height_end):
+        for x in range(width):
+            pixel = 0
+            Gx = 0
+            Gy = 0
+            for radius_y in range(-1, 2):
+                for radius_x in range(-1, 2):
+                    if 0 <= y + radius_y < height and 0 <= x + radius_x < width:
+                        Gx += (
+                            base_image_table[y + radius_y][x + radius_x]
+                            * sobel_x_matrix[radius_y + 1][radius_x + 1]
+                        )
+                        Gy += (
+                            base_image_table[y + radius_y][x + radius_x]
+                            * sobel_y_matrix[radius_y + 1][radius_x + 1]
+                        )
+
+            gradient = math.sqrt(Gx * Gx + Gy * Gy)
+            gradient_angle = math.degrees(math.atan2(Gy, Gx))
+            if gradient_angle > 157.5:
+                gradient_angle = 0
+            else:
+                increment = [0, 45, 90, 135]
+                gradient_angle = min(increment, key=lambda x: abs(x - gradient_angle))
+
+            pixel = int(gradient)
+            filtered_data.append((pixel, pixel, pixel))
 
     returned_dict[curr_process] = filtered_data
