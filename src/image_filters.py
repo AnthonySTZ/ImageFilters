@@ -196,5 +196,41 @@ def mult_proc_gaussian_blur(
     returned_dict[curr_process] = filtered_data
 
 
-def mult_proc_canny_detection() -> None:
-    pass
+def canny_edge_detector_optimize(image: Image) -> None:
+    greyscale(image)
+    gaussian_blur_optimize(image, 1)
+    image_table_single_pixel = [pixel[0] for pixel in get_table_pixel(image)]
+
+    manager = multiprocessing.Manager()
+    returned_dict = manager.dict()
+
+    procs = []
+    nb_of_procs = multiprocessing.cpu_count()
+
+    for proc_nb in range(nb_of_procs):
+        proc = Process(
+            target=mult_proc_canny_detection,
+            args=(proc_nb, nb_of_procs, image_table_single_pixel, returned_dict),
+        )  # instantiating without any argument
+        procs.append(proc)
+        proc.start()
+
+    for p in procs:
+        p.join()
+
+    filtered_image = []
+    for proc_nb in range(nb_of_procs):
+        filtered_image.extend(returned_dict[proc_nb])
+
+    image.putdata(filtered_image)
+
+
+def mult_proc_canny_detection(
+    curr_process: int, nb_of_processes: int, base_image_table: list, returned_dict: dict
+) -> None:
+    filtered_data = []
+    width, height = len(base_image_table[0]), len(base_image_table)
+    height_start = int((height / nb_of_processes) * curr_process)
+    height_end = int((height / nb_of_processes) * (curr_process + 1))
+
+    returned_dict[curr_process] = filtered_data
