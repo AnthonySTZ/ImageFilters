@@ -189,26 +189,28 @@ def mult_proc_gaussian_blur(
 
 
 @tcheck.mesure_function_time
-def box_blur_by_convolution(image: Image, blur_radius: int) -> None:
+def box_blur_by_convolution(image: Image, blur_radius: int, multiprocess: bool) -> None:
     blur_kernel = Matrix(
         [[1.0 for _ in range(blur_radius * 2 + 1)] for _ in range(blur_radius * 2 + 1)]
     )
-    table_pixels = conv.image_convolve(image, blur_kernel)
+    table_pixels = conv.mult_image_convolve(image, blur_kernel, multiprocess)
     image.putdata(table_pixels)
 
 
 @tcheck.mesure_function_time
-def sharpen_by_convolution(image: Image, strength: int) -> None:
+def sharpen_by_convolution(image: Image, strength: int, multiprocess: bool) -> None:
     sharpen_kernel = Matrix(
         [[-1.0, -1.0, -1.0], [-1.0, strength, -1.0], [-1.0, -1.0, -1.0]]
     )
 
-    table_pixels = conv.image_convolve(image, sharpen_kernel)
+    table_pixels = conv.mult_image_convolve(image, sharpen_kernel, multiprocess)
     image.putdata(table_pixels)
 
 
 @tcheck.mesure_function_time
-def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
+def gaussian_blur_by_convolution(
+    image: Image, blur_radius: int, multiprocess: bool
+) -> None:
     gaussian_matrix = []
     for y in range(blur_radius * 2 + 1):
         gaussian_matrix.append([])
@@ -221,18 +223,18 @@ def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
             )
             gaussian_matrix[y].append(weight)
     gaussian_kernel = Matrix(gaussian_matrix)
-    table_pixels = conv.mult_image_convolve(image, gaussian_kernel)
+    table_pixels = conv.mult_image_convolve(image, gaussian_kernel, multiprocess)
     image.putdata(table_pixels)
 
 
 @tcheck.mesure_function_time
-def canny_edge_detector(image: Image) -> None:
+def canny_edge_detector(image: Image, multiprocess: bool) -> None:
     greyscale(image)
     sobel_x_kernel = Matrix([[1.0, 0.0, -1.0], [2.0, 0.0, -2.0], [1.0, 0.0, -1.0]])
     sobel_y_kernel = Matrix([[1.0, 2.0, 1.0], [0.0, 0.0, 0.0], [-1.0, -2.0, -1.0]])
 
-    gradient_x = conv.image_convolve(image, sobel_x_kernel)
-    gradient_y = conv.image_convolve(image, sobel_y_kernel)
+    gradient_x = conv.mult_image_convolve(image, sobel_x_kernel, multiprocess)
+    gradient_y = conv.mult_image_convolve(image, sobel_y_kernel, multiprocess)
 
     gradient_magnitude, gradient_angle = calc_gradient_magnitude_and_angle(
         gradient_x, gradient_y

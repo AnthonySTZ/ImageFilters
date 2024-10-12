@@ -15,13 +15,15 @@ def get_table_pixel(image: Image) -> list:
     return image_table
 
 
-def mult_image_convolve(image: Image, kernel: Matrix):
+def mult_image_convolve(image: Image, kernel: Matrix, multiprocess: bool):
 
     manager = multiprocessing.Manager()
     returned_dict = manager.dict()
 
     procs = []
-    nb_of_procs = multiprocessing.cpu_count()
+    nb_of_procs = 1
+    if multiprocess:
+        nb_of_procs = multiprocessing.cpu_count()
 
     for proc_nb in range(nb_of_procs):
         proc = Process(
