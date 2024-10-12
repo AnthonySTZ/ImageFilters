@@ -242,9 +242,9 @@ def canny_edge_detector(image: Image) -> None:
         gradient_magnitude, gradient_angle, image.size
     )
 
-    double_threshold(edge_threshold)
+    threshold_pixels = double_threshold(edge_threshold, image.size)
 
-    pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in edge_threshold]
+    pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in threshold_pixels]
 
     image.putdata(pixels)
 
@@ -305,14 +305,31 @@ def non_maximum_supression(
     return edge_pixels
 
 
-def double_threshold(pixels: list[float]) -> list[tuple]:
+def double_threshold(pixels: list[float], image_shape) -> list[tuple]:
     high_threshold_ratio = 0.7
     low_threshold_ratio = 0.3
     high_threshold = max(pixels) * high_threshold_ratio
     low_threshold = high_threshold * low_threshold_ratio
 
-    for i, pixel in enumerate(pixels):
-        if pixel < low_threshold:
-            pixels[i] = 0
-        elif pixel > high_threshold:
-            pixels[i] = 255
+    new_pixels = [0 for _ in range(len(pixels))]
+
+    width, height = image_shape[0], image_shape[1]
+
+    for y in range(height):
+        for x in range(width):
+            pixel_value = pixels[y * width + x]
+            if pixel_value >= high_threshold:
+                new_pixels[y * width + x] = 255
+            elif pixel_value < low_threshold:
+                pixels[y * width + x] = 255
+            else:
+                new_pixels[y * width + x] = 255
+                for row in range(-1, 2):
+                    for col in range(-1, 2):
+                        if 0 <= x + col < width and 0 <= y + row < height:
+                            if pixel_value < pixels[y * width + row * width + x + col]:
+                                new_pixels[y * width + x] = 0
+                            else:
+                                new_pixels[y * width + x] = 255
+
+    return new_pixels
