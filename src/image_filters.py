@@ -191,7 +191,7 @@ def mult_proc_gaussian_blur(
 @tcheck.mesure_function_time
 def box_blur_by_convolution(image: Image, blur_radius: int) -> None:
     blur_kernel = Matrix(
-        [[1.0 for _ in range(blur_radius)] for _ in range(blur_radius)]
+        [[1.0 for _ in range(blur_radius * 2 + 1)] for _ in range(blur_radius * 2 + 1)]
     )
     conv.image_convolve(image, blur_kernel)
 
