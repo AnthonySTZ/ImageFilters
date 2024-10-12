@@ -323,7 +323,7 @@ def double_threshold(pixels: list[float], image_shape) -> list[tuple]:
             elif pixel_value < low_threshold:
                 pixels[y * width + x] = 255
             else:
-                new_pixels[y * width + x] = 255
+                new_pixels[y * width + x] = 0
                 for row in range(-1, 2):
                     for col in range(-1, 2):
                         if 0 <= x + col < width and 0 <= y + row < height:
