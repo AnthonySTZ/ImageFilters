@@ -223,3 +223,43 @@ def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
     gaussian_kernel = Matrix(gaussian_matrix)
     table_pixels = conv.image_convolve(image, gaussian_kernel)
     image.putdata(table_pixels)
+
+
+@tcheck.mesure_function_time
+def canny_edge_detector(image: Image) -> None:
+    greyscale(image)
+    sobel_x_kernel = Matrix([[1.0, 0.0, -1.0], [2.0, 0.0, -2.0], [1.0, 0.0, -1.0]])
+    sobel_y_kernel = Matrix([[1.0, 2.0, 1.0], [0.0, 0.0, 0.0], [-1.0, -2.0, -1.0]])
+
+    gradient_x = conv.image_convolve(image, sobel_x_kernel)
+    gradient_y = conv.image_convolve(image, sobel_y_kernel)
+
+    gradient_magnitude, gradient_angle = calc_gradient_magnitude_and_angle(
+        gradient_x, gradient_y
+    )
+
+    print(gradient_magnitude[0:5])
+
+    pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in gradient_magnitude]
+
+    image.putdata(pixels)
+
+
+def calc_gradient_magnitude_and_angle(
+    gradient_x: int, gradient_y: int
+) -> tuple[list[float]]:
+    gradient_magnitude = [
+        math.sqrt(gradient_x[i][0] ** 2 + gradient_y[i][0] ** 2)
+        for i in range(len(gradient_x))
+    ]
+    gradient_angle = [
+        math.degrees(
+            math.atan2(
+                gradient_y[i][0],
+                gradient_x[i][0],
+            )
+        )
+        for i in range(len(gradient_x))
+    ]
+
+    return gradient_magnitude, gradient_angle

@@ -33,5 +33,6 @@ class Matrix:
             for x in range(self.size[1]):
                 result += self.matrix[y][x] * kernel.matrix[y][x]
 
-        result /= kernel.sum
+        if kernel.sum != 0:
+            result /= kernel.sum
         return int(result)
