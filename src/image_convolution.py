@@ -28,20 +28,17 @@ def image_convolve(image: Image, kernel: Matrix) -> None:
                 padding[1] < y < height - padding[1]
                 and padding[0] < x < width - padding[0]
             ):
-                matrix_r = [[] for _ in range(kernel.size[0])]
-                matrix_g = [[] for _ in range(kernel.size[0])]
-                matrix_b = [[] for _ in range(kernel.size[0])]
-                for row in range(kernel.size[0]):
-                    for col in range(kernel.size[1]):
-                        matrix_r[row].append(
-                            table_pixel[y + row - padding[0]][x + col - padding[1]][0]
-                        )
-                        matrix_g[row].append(
-                            table_pixel[y + row - padding[0]][x + col - padding[1]][1]
-                        )
-                        matrix_b[row].append(
-                            table_pixel[y + row - padding[0]][x + col - padding[1]][2]
-                        )
+
+                matrix_r, matrix_g, matrix_b = (
+                    [
+                        [
+                            table_pixel[y + row - padding[0]][x + col - padding[1]][i]
+                            for col in range(kernel.size[1])
+                        ]
+                        for row in range(kernel.size[0])
+                    ]
+                    for i in range(3)
+                )
                 result_r = Matrix(matrix_r).convolve_by(kernel)
                 result_g = Matrix(matrix_g).convolve_by(kernel)
                 result_b = Matrix(matrix_b).convolve_by(kernel)
