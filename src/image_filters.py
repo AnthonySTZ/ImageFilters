@@ -3,6 +3,7 @@ import multiprocessing
 from multiprocessing import Process
 import timechecking as tcheck
 import image_convolution as conv
+from matrix import Matrix
 
 
 def greyscale(image: Image) -> None:
@@ -184,3 +185,10 @@ def mult_proc_gaussian_blur(
             filtered_data.append(tuple(pixel))
 
     returned_dict[curr_process] = filtered_data
+
+
+def box_blur_by_convolution(image: Image, blur_radius: int) -> None:
+    blur_kernel = Matrix(
+        [[1.0 for _ in range(blur_radius)] for _ in range(blur_radius)]
+    )
+    conv.image_convolve(image, blur_kernel)
