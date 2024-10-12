@@ -193,3 +193,12 @@ def box_blur_by_convolution(image: Image, blur_radius: int) -> None:
         [[1.0 for _ in range(blur_radius)] for _ in range(blur_radius)]
     )
     conv.image_convolve(image, blur_kernel)
+
+
+@tcheck.mesure_function_time
+def sharpen_by_convolution(image: Image, strength: int) -> None:
+    sharpen_kernel = Matrix(
+        [[-1.0, -1.0, -1.0], [-1.0, strength, -1.0], [-1.0, -1.0, -1.0]]
+    )
+
+    conv.image_convolve(image, sharpen_kernel)
