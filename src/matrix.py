@@ -22,7 +22,7 @@ class Matrix:
     def __repr__(self) -> str:
         return f"Matrix of size {self.size} :\n{self.matrix[0]}\n{self.matrix[1]}\n{self.matrix[2]}"
 
-    def convolve_by(self, kernel: "Matrix") -> float:
+    def convolve_by(self, kernel: "Matrix") -> int:
         if self.size != kernel.size:
             raise ValueError(
                 "The two matrices must have the same size for multiplication."
@@ -34,4 +34,4 @@ class Matrix:
                 result += self.matrix[y][x] * kernel.matrix[y][x]
 
         result /= kernel.sum
-        return result
+        return int(result)
