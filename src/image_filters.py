@@ -4,6 +4,7 @@ from multiprocessing import Process
 import timechecking as tcheck
 import image_convolution as conv
 from matrix import Matrix
+import math
 
 
 def greyscale(image: Image) -> None:
@@ -202,3 +203,20 @@ def sharpen_by_convolution(image: Image, strength: int) -> None:
     )
 
     conv.image_convolve(image, sharpen_kernel)
+
+
+@tcheck.mesure_function_time
+def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
+    gaussian_matrix = []
+    for y in range(blur_radius * 2 + 1):
+        gaussian_matrix.append([])
+        for x in range(blur_radius * 2 + 1):
+            distance = (x - blur_radius) ** 2 + (y - blur_radius) ** 2
+            weight = (
+                1.0
+                / (2 * math.pi * blur_radius**2)
+                * math.exp(-distance / (2 * blur_radius**2))
+            )
+            gaussian_matrix[y].append(weight)
+    gaussian_kernel = Matrix(gaussian_matrix)
+    conv.image_convolve(image, gaussian_kernel)

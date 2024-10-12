@@ -10,5 +10,5 @@ if __name__ == "__main__":
     # gaussian_kernel = Matrix([[0.0, 1.0, 0.0], [1.0, 4.0, 1.0], [0.0, 1.0, 0.0]])
     # sharpen_kernel = Matrix([[-1.0, -1.0, -1.0], [-1.0, 5.0, -1.0], [-1.0, -1.0, -1.0]])
     # filters.box_blur_by_convolution(image_data, 5)
-    filters.sharpen_by_convolution(image_data, 9)
+    filters.gaussian_blur_by_convolution(image_data, 2)
     image_data = im.save_image(image_data, "assets/test/filtered.jpg")
