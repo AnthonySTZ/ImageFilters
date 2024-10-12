@@ -242,6 +242,8 @@ def canny_edge_detector(image: Image) -> None:
         gradient_magnitude, gradient_angle, image.size
     )
 
+    double_threshold(edge_threshold)
+
     pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in edge_threshold]
 
     image.putdata(pixels)
@@ -301,3 +303,16 @@ def non_maximum_supression(
             edge_pixels.append(on_edge)
 
     return edge_pixels
+
+
+def double_threshold(pixels: list[float]) -> list[tuple]:
+    high_threshold_ratio = 0.7
+    low_threshold_ratio = 0.3
+    high_threshold = max(pixels) * high_threshold_ratio
+    low_threshold = high_threshold * low_threshold_ratio
+
+    for i, pixel in enumerate(pixels):
+        if pixel < low_threshold:
+            pixels[i] = 0
+        elif pixel > high_threshold:
+            pixels[i] = 255
