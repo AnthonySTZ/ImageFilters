@@ -23,3 +23,9 @@ Create a basic blur filter on the original image.
 Create a Gaussian blur filter on the original image
 
 ![Gaussian Blur Image](./assets/gaussian.jpg)
+
+## Sharpen
+
+Create a sharpen filter on the original image
+
+![Sharpen Image](./assets/sharpen.jpg)
