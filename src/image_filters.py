@@ -221,7 +221,7 @@ def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
             )
             gaussian_matrix[y].append(weight)
     gaussian_kernel = Matrix(gaussian_matrix)
-    table_pixels = conv.image_convolve(image, gaussian_kernel)
+    table_pixels = conv.mult_image_convolve(image, gaussian_kernel)
     image.putdata(table_pixels)
 
 

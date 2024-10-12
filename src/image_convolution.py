@@ -1,5 +1,7 @@
 from PIL import Image
 from matrix import Matrix
+import multiprocessing
+from multiprocessing import Process
 
 
 def get_table_pixel(image: Image) -> list:
@@ -13,13 +15,44 @@ def get_table_pixel(image: Image) -> list:
     return image_table
 
 
-def image_convolve(image: Image, kernel: Matrix) -> list[tuple]:
+def mult_image_convolve(image: Image, kernel: Matrix):
+
+    manager = multiprocessing.Manager()
+    returned_dict = manager.dict()
+
+    procs = []
+    nb_of_procs = multiprocessing.cpu_count()
+
+    for proc_nb in range(nb_of_procs):
+        proc = Process(
+            target=image_convolve,
+            args=(image, kernel, returned_dict, proc_nb, nb_of_procs),
+        )  # instantiating without any argument
+        procs.append(proc)
+        proc.start()
+
+    for p in procs:
+        p.join()
+
+    filtered_image = []
+    for proc_nb in range(nb_of_procs):
+        filtered_image.extend(returned_dict[proc_nb])
+
+    return filtered_image
+
+
+def image_convolve(
+    image: Image, kernel: Matrix, returned_dict: dict, proc_nb: int, nb_of_procs: int
+) -> list[tuple]:
     table_pixel = get_table_pixel(image)
     width, height = len(table_pixel[0]), len(table_pixel)
     padding = int((kernel.size[0] - 1) * 0.5), int((kernel.size[1] - 1) * 0.5)
     convolved_table = []
 
-    for y in range(height):
+    height_start = int((height / nb_of_procs) * proc_nb)
+    height_end = int((height / nb_of_procs) * (proc_nb + 1))
+
+    for y in range(height_start, height_end):
         for x in range(width):
             result_r, result_g, result_b = table_pixel[y][x]
             if (
@@ -45,4 +78,4 @@ def image_convolve(image: Image, kernel: Matrix) -> list[tuple]:
 
         print(f"Row {y} / {height - padding[1]}")
 
-    return convolved_table
+    returned_dict[proc_nb] = convolved_table
