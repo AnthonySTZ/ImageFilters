@@ -7,6 +7,10 @@ class Matrix:
     def size(self) -> tuple:
         return (len(self.matrix), len(self.matrix[0]))
 
+    @property
+    def sum(self) -> float:
+        return sum(sum(row) for row in self.matrix)
+
     def check(self) -> None:
         if len(self.matrix) == 0:
             raise ValueError("The matrix cannot be empty.")
@@ -18,9 +22,16 @@ class Matrix:
     def __repr__(self) -> str:
         return f"Matrix of size {self.size} :\n{self.matrix[0]}\n{self.matrix[1]}\n{self.matrix[2]}"
 
-    def mult_cells(self, matrix: "Matrix") -> "Matrix":
-        result = Matrix([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
-        for y in range(3):
-            for x in range(3):
-                result.matrix[y][x] += self.matrix[y][x] * matrix.matrix[y][x]
+    def convolve_by(self, kernel: "Matrix") -> float:
+        if self.size != kernel.size:
+            raise ValueError(
+                "The two matrices must have the same size for multiplication."
+            )
+
+        result = 0
+        for y in range(self.size[0]):
+            for x in range(self.size[1]):
+                result += self.matrix[y][x] * kernel.matrix[y][x]
+
+        result /= kernel.sum
         return result
