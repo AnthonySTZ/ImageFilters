@@ -29,3 +29,7 @@ Create a Gaussian blur filter on the original image
 Create a sharpen filter on the original image
 
 ![Sharpen Image](./assets/sharpen.jpg)
+
+## Canny Edge Detection
+
+![Canny Edge Detection](./assets/canny.jpg)
