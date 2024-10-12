@@ -13,13 +13,11 @@ def get_table_pixel(image: Image) -> list:
     return image_table
 
 
-def image_convolve(image: Image, kernel: Matrix) -> None:
+def image_convolve(image: Image, kernel: Matrix) -> list[tuple]:
     table_pixel = get_table_pixel(image)
     width, height = len(table_pixel[0]), len(table_pixel)
     padding = int((kernel.size[0] - 1) * 0.5), int((kernel.size[1] - 1) * 0.5)
     convolved_table = []
-
-    print(padding)
 
     for y in range(height):
         for x in range(width):
@@ -47,4 +45,4 @@ def image_convolve(image: Image, kernel: Matrix) -> None:
 
         print(f"Row {y} / {height - padding[1]}")
 
-    image.putdata(convolved_table)
+    return convolved_table

@@ -193,7 +193,8 @@ def box_blur_by_convolution(image: Image, blur_radius: int) -> None:
     blur_kernel = Matrix(
         [[1.0 for _ in range(blur_radius * 2 + 1)] for _ in range(blur_radius * 2 + 1)]
     )
-    conv.image_convolve(image, blur_kernel)
+    table_pixels = conv.image_convolve(image, blur_kernel)
+    image.putdata(table_pixels)
 
 
 @tcheck.mesure_function_time
@@ -202,7 +203,8 @@ def sharpen_by_convolution(image: Image, strength: int) -> None:
         [[-1.0, -1.0, -1.0], [-1.0, strength, -1.0], [-1.0, -1.0, -1.0]]
     )
 
-    conv.image_convolve(image, sharpen_kernel)
+    table_pixels = conv.image_convolve(image, sharpen_kernel)
+    image.putdata(table_pixels)
 
 
 @tcheck.mesure_function_time
@@ -219,4 +221,5 @@ def gaussian_blur_by_convolution(image: Image, blur_radius: int) -> None:
             )
             gaussian_matrix[y].append(weight)
     gaussian_kernel = Matrix(gaussian_matrix)
-    conv.image_convolve(image, gaussian_kernel)
+    table_pixels = conv.image_convolve(image, gaussian_kernel)
+    image.putdata(table_pixels)
