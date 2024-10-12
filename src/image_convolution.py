@@ -1,6 +1,16 @@
 from PIL import Image
 from matrix import Matrix
-from image_filters import get_table_pixel
+
+
+def get_table_pixel(image: Image) -> list:
+    width, height = image.size
+    image_data = list(image.getdata())
+    image_table = []
+    for y in range(height):
+        image_table.append([])
+        for x in range(width):
+            image_table[y].append(image_data[y * width + x])
+    return image_table
 
 
 def image_convolve(image: Image, kernel: Matrix) -> None:

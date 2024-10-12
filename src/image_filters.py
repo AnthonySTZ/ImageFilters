@@ -2,17 +2,7 @@ from PIL import Image
 import multiprocessing
 from multiprocessing import Process
 import timechecking as tcheck
-
-
-def get_table_pixel(image: Image) -> list:
-    width, height = image.size
-    image_data = list(image.getdata())
-    image_table = []
-    for y in range(height):
-        image_table.append([])
-        for x in range(width):
-            image_table[y].append(image_data[y * width + x])
-    return image_table
+import image_convolution as conv
 
 
 def greyscale(image: Image) -> None:
@@ -32,7 +22,7 @@ def greyscale(image: Image) -> None:
 
 @tcheck.mesure_function_time
 def blur(image: Image, blur_radius: int) -> None:
-    image_table = get_table_pixel(image)
+    image_table = conv.get_table_pixel(image)
     filtered_data = []
     width, height = len(image_table[0]), len(image_table)
 
@@ -60,7 +50,7 @@ def blur(image: Image, blur_radius: int) -> None:
 
 @tcheck.mesure_function_time
 def blur_optimize(image: Image, blur_radius: int) -> None:
-    image_table = get_table_pixel(image)
+    image_table = conv.get_table_pixel(image)
 
     manager = multiprocessing.Manager()
     returned_dict = manager.dict()
@@ -121,7 +111,7 @@ def mult_proc_blur(
 
 @tcheck.mesure_function_time
 def gaussian_blur_optimize(image: Image, blur_radius: int) -> None:
-    image_table = get_table_pixel(image)
+    image_table = conv.get_table_pixel(image)
 
     manager = multiprocessing.Manager()
     returned_dict = manager.dict()
