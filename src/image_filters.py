@@ -238,28 +238,66 @@ def canny_edge_detector(image: Image) -> None:
         gradient_x, gradient_y
     )
 
-    print(gradient_magnitude[0:5])
+    edge_threshold = non_maximum_supression(
+        gradient_magnitude, gradient_angle, image.size
+    )
 
-    pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in gradient_magnitude]
+    pixels = [(int(pixel), int(pixel), int(pixel)) for pixel in edge_threshold]
 
     image.putdata(pixels)
 
 
 def calc_gradient_magnitude_and_angle(
-    gradient_x: int, gradient_y: int
+    gradient_x: list, gradient_y: list
 ) -> tuple[list[float]]:
     gradient_magnitude = [
         math.sqrt(gradient_x[i][0] ** 2 + gradient_y[i][0] ** 2)
         for i in range(len(gradient_x))
     ]
-    gradient_angle = [
-        math.degrees(
+    gradient_angle = [0 for _ in range(len(gradient_x))]
+
+    for i in range(len(gradient_x)):
+        angle = math.degrees(
             math.atan2(
                 gradient_y[i][0],
                 gradient_x[i][0],
             )
         )
-        for i in range(len(gradient_x))
-    ]
+        if angle > 157.5:
+            angle = 0
+        else:
+            angle = min([0, 45, 90, 135], key=lambda x: abs(x - angle))
+
+        gradient_angle[i] = angle
 
     return gradient_magnitude, gradient_angle
+
+
+def non_maximum_supression(
+    gradient_magnitude: list, gradient_angle: list, image_shape: tuple
+) -> list[tuple]:
+    width, height = image_shape[0], image_shape[1]
+
+    directions = {
+        0: [(-1, 0), (1, 0)],
+        45: [(1, -1), (-1, 1)],
+        90: [(0, -1), (0, 1)],
+        135: [(-1, -1), (1, 1)],
+    }
+
+    edge_pixels = []
+
+    for y in range(height):
+        for x in range(width):
+            magnitude = gradient_magnitude[y * width + x]
+            angle = gradient_angle[y * width + x]
+            on_edge = magnitude
+            for direction in directions[angle]:
+                dx, dy = direction
+                new_x, new_y = x + dx, y + dy
+                if 0 < new_x < width and 0 < new_y < height:
+                    if magnitude < gradient_magnitude[new_y * width + new_x]:
+                        on_edge = 0
+            edge_pixels.append(on_edge)
+
+    return edge_pixels
