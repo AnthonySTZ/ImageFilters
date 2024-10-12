@@ -13,9 +13,7 @@ def image_convolve(image: Image, kernel: Matrix) -> None:
 
     for y in range(height):
         for x in range(width):
-            result_r = 0
-            result_g = 0
-            result_b = 0
+            result_r, result_g, result_b = table_pixel[y][x]
             if (
                 padding[1] < y < height - padding[1]
                 and padding[0] < x < width - padding[0]
