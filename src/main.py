@@ -8,5 +8,6 @@ if __name__ == "__main__":
     # # filters.blur_optimize(image_data, 3)
     # filters.gaussian_blur_optimize(image_data, 5)
     gaussian_kernel = Matrix([[0.0, 1.0, 0.0], [1.0, 4.0, 1.0], [0.0, 1.0, 0.0]])
+    sharpen_kernel = Matrix([[-1.0, -1.0, -1.0], [-1.0, 5.0, -1.0], [-1.0, -1.0, -1.0]])
     image_convolve(image_data, gaussian_kernel)
     image_data = im.save_image(image_data, "assets/test/filtered.jpg")
