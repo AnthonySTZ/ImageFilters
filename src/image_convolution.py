@@ -20,6 +20,8 @@ def mult_image_convolve(image: Image, kernel: Matrix, multiprocess: bool):
     manager = multiprocessing.Manager()
     returned_dict = manager.dict()
 
+    kernel.normalize()
+
     procs = []
     nb_of_procs = 1
     if multiprocess:
@@ -57,11 +59,11 @@ def image_convolve(
     for y in range(height_start, height_end):
         for x in range(width):
             result_r, result_g, result_b = table_pixel[y][x]
+
             if (
                 padding[1] < y < height - padding[1]
                 and padding[0] < x < width - padding[0]
             ):
-
                 matrix_r, matrix_g, matrix_b = (
                     [
                         [

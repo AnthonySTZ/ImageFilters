@@ -1,11 +1,8 @@
 class Matrix:
     def __init__(self, matrix: list[list]) -> None:
         self.matrix = matrix
+        self.size = (len(self.matrix), len(self.matrix[0]))
         self.check()
-
-    @property
-    def size(self) -> tuple:
-        return (len(self.matrix), len(self.matrix[0]))
 
     @property
     def sum(self) -> float:
@@ -33,6 +30,15 @@ class Matrix:
             for x in range(self.size[1]):
                 result += self.matrix[y][x] * kernel.matrix[y][x]
 
-        if kernel.sum != 0:
-            result /= kernel.sum
+        # if kernel.sum != 0:
+        #     result /= kernel.sum
         return int(result)
+
+    def normalize(self) -> None:
+        total = self.sum
+        if total == 0:
+            return
+
+        for y in range(self.size[0]):
+            for x in range(self.size[1]):
+                self.matrix[y][x] /= total
