@@ -12,5 +12,6 @@ if __name__ == "__main__":
     # filters.box_blur_by_convolution(image_data, 2, True)
     # filters.gaussian_blur_by_convolution(image_data, 2, False)
     # filters.canny_edge_detector(image_data, True)
-    filters.emboss_by_convolution(image_data, True)
+    # filters.emboss_by_convolution(image_data, True)
+    filters.outline_by_convolution(image_data, True)
     image_data = im.save_image(image_data, "assets/test/filtered.jpg")

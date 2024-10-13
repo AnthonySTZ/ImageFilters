@@ -36,6 +36,12 @@ Create a sharpen filter on the original image
 
 ## Emboss
 
-Create a emboss filter on the original image
+Create an emboss filter on the original image
 
 ![Emboss Filter Image](./assets/emboss.jpg)
+
+## Outline
+
+Create an outline filter on the original image
+
+![Outline Filter Image](./assets/outline.jpg)

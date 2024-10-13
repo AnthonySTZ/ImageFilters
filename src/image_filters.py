@@ -343,3 +343,11 @@ def emboss_by_convolution(image: Image, multiprocess: bool) -> None:
 
     table_pixels = conv.mult_image_convolve(image, emboss_kernel, multiprocess)
     image.putdata(table_pixels)
+
+
+@tcheck.mesure_function_time
+def outline_by_convolution(image: Image, multiprocess: bool) -> None:
+    emboss_kernel = Matrix([[-1.0, -1.0, -1.0], [-1.0, 8.0, -1.0], [-1.0, -1.0, -1.0]])
+
+    table_pixels = conv.mult_image_convolve(image, emboss_kernel, multiprocess)
+    image.putdata(table_pixels)
