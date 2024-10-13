@@ -33,3 +33,9 @@ Create a sharpen filter on the original image
 ## Canny Edge Detection
 
 ![Canny Edge Detection](./assets/canny.jpg)
+
+## Emboss
+
+Create a emboss filter on the original image
+
+![Emboss Filter Image](./assets/emboss.jpg)

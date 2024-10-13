@@ -335,3 +335,11 @@ def double_threshold(pixels: list[float], image_shape) -> list[tuple]:
                                 new_pixels[y * width + x] = 255
 
     return new_pixels
+
+
+@tcheck.mesure_function_time
+def emboss_by_convolution(image: Image, multiprocess: bool) -> None:
+    emboss_kernel = Matrix([[-2.0, -1.0, 0.0], [-1.0, 1.0, 1.0], [0.0, 1.0, 2.0]])
+
+    table_pixels = conv.mult_image_convolve(image, emboss_kernel, multiprocess)
+    image.putdata(table_pixels)
