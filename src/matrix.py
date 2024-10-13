@@ -1,7 +1,7 @@
 class Matrix:
     def __init__(self, matrix: list[list]) -> None:
         self.matrix = matrix
-        self.size = (len(self.matrix), len(self.matrix[0]))
+        self.size = (len(self.matrix[0]), len(self.matrix))
         self.check()
 
     @property
@@ -26,12 +26,10 @@ class Matrix:
             )
 
         result = 0
-        for y in range(self.size[0]):
-            for x in range(self.size[1]):
-                result += self.matrix[y][x] * kernel.matrix[y][x]
+        for row_m, row_k in zip(self.matrix, kernel.matrix):
+            for cell_m, cell_k in zip(row_m, row_k):
+                result += cell_m * cell_k
 
-        # if kernel.sum != 0:
-        #     result /= kernel.sum
         return int(result)
 
     def normalize(self) -> None:
