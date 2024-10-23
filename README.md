@@ -1,7 +1,7 @@
 # Image Filters
 
 Create different filters on images such as blur, edge detect, greyscale,... to learn more about their algorithms.
-I don't really care about performance here that's why I used Python and not C/C++. 
+I don't really care about performance here that's why I used Python and not C/C++ or GPU programming. 
 
 ## Original Image
 
